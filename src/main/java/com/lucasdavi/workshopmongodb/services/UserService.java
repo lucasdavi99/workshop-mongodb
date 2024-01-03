@@ -1,5 +1,6 @@
 package com.lucasdavi.workshopmongodb.services;
 
+import com.lucasdavi.workshopmongodb.dtos.UserDTO;
 import com.lucasdavi.workshopmongodb.models.User;
 import com.lucasdavi.workshopmongodb.repositories.UserRepository;
 import com.lucasdavi.workshopmongodb.services.exceptions.ObjectNotFoundException;
@@ -27,9 +28,24 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Void delete(String id) {
+    public void delete(String id) {
         findById(id);
         userRepository.deleteById(id);
-        return null;
     }
+
+    public User update(User user) {
+        User newUser = findById(user.getId());
+        updateData(newUser, user);
+        return userRepository.save(newUser);
+    }
+
+    private void updateData(User newUser, User user) {
+        newUser.setName(user.getName());
+        newUser.setEmail(user.getEmail());
+    }
+
+    public User fromDTO(UserDTO objDto) {
+        return new User(objDto.name(), objDto.email());
+    }
+
 }
